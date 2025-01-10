@@ -41,19 +41,19 @@ struct ContentView: View {
             HStack {
                 Button(action: {selectAnswerButton(answer: true)}){
                     Label("맞음", systemImage: "checkmark")
-                        .font(.largeTitle)
-                        .fontWeight(.heavy)
                         .foregroundStyle(.green)
                 }
                 .padding(.trailing, 20)
                 
                 Button(action: {selectAnswerButton(answer: false)}){
                     Label("틀림", systemImage: "xmark")
-                        .font(.largeTitle)
-                        .fontWeight(.heavy)
+                      
                         .foregroundStyle(.red)
                 }
+               
             }
+            .font(.largeTitle)
+            .fontWeight(.heavy)
             Spacer()
             VStack {
                 HStack {
