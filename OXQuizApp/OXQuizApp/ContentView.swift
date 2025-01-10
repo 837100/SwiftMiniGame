@@ -9,13 +9,15 @@ import SwiftUI
 
 struct ContentView: View {
     let gradientView: LinearGradient = LinearGradient(gradient: Gradient(colors: [Color.init(red: 1, green: 0, blue: 0, opacity: 0.55), Color.init(red: 1, green: 0, blue: 0, opacity: 0.65)]), startPoint: .top, endPoint: .center)
-    @State var number1: Int = 4
-    @State var number2: Int = 2
-    @State var resultNumber: Int = 9
+    @State var number1: Int
+    @State var number2: Int
+    @State var resultNumber: Int
     @State var inputAnswer: Bool = false
     
     @State var countCorrect: Int = 0
     @State var countWrong: Int = 0
+    
+    
     
     var body: some View {
         // UI 구성 및 로직 작성 부분
@@ -140,6 +142,30 @@ struct ContentView: View {
         } else {
             selectWrong()
         }
+    }
+    
+    static func firstNumber() -> (firstNumber1: Int, firstNumber2: Int, firstResult: Int) {
+        let firstNumber1: Int = Int.random(in: 1...19)
+        let firstNumber2: Int = Int.random(in: 1...19)
+        var firstResult = 0
+        switch(Int.random(in: 1...3)) {
+        case 1:
+             firstResult = firstNumber1 * firstNumber2
+        case 2:
+             firstResult = firstNumber1 * firstNumber2 + Int.random(in: 1...2)
+        case 3:
+             firstResult = firstNumber1 * firstNumber2 - Int.random(in: 1...2)
+        default:
+             firstResult = 0
+        }
+        return (firstNumber1, firstNumber2, firstResult)
+    }
+    
+    init() {
+        let numbers = ContentView.firstNumber()
+        _number1 = State(initialValue: numbers.firstNumber1)
+        _number2 = State(initialValue: numbers.firstNumber2)
+        _resultNumber = State(initialValue: numbers.firstResult)
     }
     
 } // end of ContentView()
