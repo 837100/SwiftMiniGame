@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     let gradientView: LinearGradient = LinearGradient(gradient: Gradient(colors: [Color.init(red: 1, green: 0, blue: 0, opacity: 0.55), Color.init(red: 1, green: 0, blue: 0, opacity: 0.65)]), startPoint: .top, endPoint: .center)
-    @State var number1: Int
-    @State var number2: Int
-    @State var resultNumber: Int
+    @State var number1: Int = 0
+    @State var number2: Int = 0
+    @State var resultNumber: Float = 0
+    @State var resultNumberPrint: String = ""
     @State var inputAnswer: Bool = false
+    @State var calState: String = ""
     
     @State var countCorrect: Int = 0
     @State var countWrong: Int = 0
@@ -31,7 +33,10 @@ struct ContentView: View {
             
             Spacer()
             
-            Text("\(number1) X \(number2) = \(resultNumber)")
+                .onAppear {
+                    reloadQuiz()
+                }
+            Text("\(number1) \(calState) \(number2) = \(resultNumberPrint)")
                 .font(.largeTitle)
                 .fontWeight(.heavy)
                 .padding(.vertical,20)
@@ -47,20 +52,20 @@ struct ContentView: View {
                 
                 Button(action: {selectAnswerButton(answer: false)}){
                     Label("틀림", systemImage: "xmark")
-                      
+                    
                         .foregroundStyle(.red)
                 }
-               
+                
             }
             .font(.largeTitle)
             .fontWeight(.heavy)
             Spacer()
             VStack {
                 HStack {
-                    Text("\(countCorrect)개 맞춤")
+                    Text("정답 수 : \(countCorrect)")
                         .font(.largeTitle)
                         .padding(.trailing, 20)
-                    Text("\(countWrong)개 틀림")
+                    Text("오답 수 : \(countWrong)")
                         .font(.largeTitle)
                 }
                 
@@ -107,15 +112,30 @@ struct ContentView: View {
     func reloadQuiz() {
         number1 = Int.random(in: 1...19)
         number2 = Int.random(in: 1...19)
-        switch(Int.random(in: 1...3)) {
+        switch(Int.random(in: 0...3)) {
+//        switch(3) {
+        case 0:
+            resultNumber = Float(number1 + number2 + Int.random(in: -2...2))
+            calState = "+"
         case 1:
-            resultNumber = number1 * number2
+            resultNumber = Float(number1 - number2 + Int.random(in: -2...2))
+            calState = "-"
         case 2:
-            resultNumber = number1 * number2 + Int.random(in: 1...2)
+            resultNumber = Float(number1 * number2 + Int.random(in: -2...2))
+            calState = "*"
         case 3:
-            resultNumber = number1 * number2 - Int.random(in: 1...2)
+            resultNumber = Float(number1) / Float(number2) + Float(Int.random(in: 0...1))
+            calState = "/"
         default:
             print("error")
+        }
+        
+        if resultNumber.truncatingRemainder(dividingBy: 1) == 0 {
+            resultNumberPrint = String(Int(resultNumber))
+        } else if (resultNumber * 10).truncatingRemainder(dividingBy: 1) == 0 {
+            resultNumberPrint = String(format: "%.1f", resultNumber)
+        }else {
+            resultNumberPrint = String(format: "%.2f", resultNumber)
         }
         
     }
@@ -134,9 +154,30 @@ struct ContentView: View {
     }
     
     func selectAnswerButton(answer: Bool) {
-        var correctAnswer: Bool = false
-        correctAnswer = number1 * number2 == resultNumber
-        //        print("answer = \(answer)")
+        var correctAnswer: Bool = false // 기본 값 false
+        
+        switch(calState) {
+        case "+":
+            if (Float(number1) + Float(number2) == resultNumber) {
+                correctAnswer = true
+            }
+        case "-":
+            if (Float(number1) - Float(number2) == resultNumber) {
+                correctAnswer = true
+            }
+        case "*":
+            if (Float(number1) * Float(number2) == resultNumber) {
+                correctAnswer = true
+            }
+        case "/":
+            if (Float(number1) / Float(number2) == resultNumber) {
+                correctAnswer = true
+            }
+        default:
+            print("error")
+            break
+        }
+        
         if (answer == correctAnswer) {
             selectCorrect()
         } else {
@@ -144,29 +185,8 @@ struct ContentView: View {
         }
     }
     
-    static func firstNumber() -> (firstNumber1: Int, firstNumber2: Int, firstResult: Int) {
-        let firstNumber1: Int = Int.random(in: 1...19)
-        let firstNumber2: Int = Int.random(in: 1...19)
-        var firstResult = 0
-        switch(Int.random(in: 1...3)) {
-        case 1:
-             firstResult = firstNumber1 * firstNumber2
-        case 2:
-             firstResult = firstNumber1 * firstNumber2 + Int.random(in: 1...2)
-        case 3:
-             firstResult = firstNumber1 * firstNumber2 - Int.random(in: 1...2)
-        default:
-             firstResult = 0
-        }
-        return (firstNumber1, firstNumber2, firstResult)
-    }
     
-    init() {
-        let numbers = ContentView.firstNumber()
-        _number1 = State(initialValue: numbers.firstNumber1)
-        _number2 = State(initialValue: numbers.firstNumber2)
-        _resultNumber = State(initialValue: numbers.firstResult)
-    }
+    
     
 } // end of ContentView()
 
