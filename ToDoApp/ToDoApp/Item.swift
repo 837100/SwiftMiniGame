@@ -10,9 +10,14 @@ import SwiftData
 
 @Model
 final class Item {
-    var timestamp: Date
     
-    init(timestamp: Date) {
-        self.timestamp = timestamp
+    var todo: String
+    var todoNumber: Int?
+    var makeDate: Date?
+    var endDate: Date
+    
+    init(todo: String , endDate: Date) {
+        self.todo = todo
+        self.endDate = endDate
     }
 }
