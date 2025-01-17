@@ -41,11 +41,9 @@ struct ContentView: View {
                         Text("다시 쓰기")
                     })
                     .border(.blue)
-                    Button(action: {
-                        addItem()
-                    }, label: {
+                    NavigationLink(destination: ToDoFind(todo: todo , endDate: endDate)) {
                         Text("검색")
-                    })
+                    }
                     .border(.blue)
                     Button(action: {
                         addItem()
