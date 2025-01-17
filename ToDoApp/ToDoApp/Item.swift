@@ -12,6 +12,7 @@ import SwiftData
 final class Item {
     
     var todo: String
+    var todoDetails: String?
     var todoNumber: Int?
     var makeDate: Date?
     var endDate: Date

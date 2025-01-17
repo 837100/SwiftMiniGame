@@ -16,6 +16,7 @@ struct ContentView: View {
         let calendar = Calendar.current
         return calendar.date(byAdding: .minute, value: 30, to: Date()) ?? Date()
     } ()
+    @State var todoDetails: String = ""
     
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
@@ -57,7 +58,7 @@ struct ContentView: View {
                 List {
                     ForEach(items) { item in
                         NavigationLink {
-                            Text(item.todo)
+                            DetailView(item: item)
                         } label: {
                             HStack {
                                 Text(item.todo)
@@ -67,11 +68,14 @@ struct ContentView: View {
                         }
                     }
                     .onDelete(perform: deleteItems)
+                    
                 } // end of List
                 
             } // end of VStack
         } // end of NavigationStack
     } // end of body view
+    
+    
     
     private func addItem() {
         withAnimation {
@@ -97,9 +101,42 @@ struct ContentView: View {
         return formatter.string(from: date)
     }
    
-    
+
 } // end of ContentView
 
+struct DetailView: View {
+    @Bindable var item: Item
+    
+    var body: some View {
+        VStack(spacing: 20) {
+           
+            
+            TextField("할 일", text: Binding(
+                get: { item.todo },
+                set: { item.todo = $0 }
+            ))
+            .textFieldStyle(.roundedBorder)
+            
+            
+            TextField("할 일 상세", text: Binding(
+                get: { item.todoDetails ?? "" },
+                set: { item.todoDetails = $0 })
+                      ,axis: .vertical
+            ).lineLimit(1...20)
+            .textFieldStyle(.roundedBorder)
+            DatePicker("마감일", selection: Binding(
+                get: { item.endDate },
+                set: { item.endDate = $0 }
+            ))
+            
+            
+            Spacer()
+            
+          
+        }
+        .padding()
+    }
+}
 #Preview {
     ContentView()
         .modelContainer(for: Item.self, inMemory: true)

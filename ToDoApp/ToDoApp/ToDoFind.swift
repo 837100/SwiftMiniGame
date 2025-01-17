@@ -33,7 +33,7 @@ struct ToDoFind: View {
             let descriptor = FetchDescriptor<Item>(predicate: #Predicate<Item> { item in
                 if item.todo.contains(todo) {
                     return true
-                } else if item.endDate == endDate {
+                } else if item.endDate <= endDate {
                     return true
                 } else {
                     return false
