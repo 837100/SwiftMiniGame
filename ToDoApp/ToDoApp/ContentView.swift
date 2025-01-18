@@ -19,7 +19,7 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 /// 사용자가 할 일을 입력할 수 있는 텍스트 필드를 생성.
-                TextField("오늘의 할 일을 적어주세요 : 예) 빨래널기", text: $todo)
+                TextField("오늘의 할 일을 적어주세요", text: $todo)
                     .border(.secondary)
                 
                 TextField("상세 설명을 적어주세요", text: $todoDetails)
@@ -38,7 +38,7 @@ struct ContentView: View {
                         todo = ""
                         todoDetails = ""
                     }, label: {
-                        Text("다시 쓰기")
+                        Text("지우기")
                     })
                     .border(.blue)
                     /// 검색 화면으로 이동하는 네비게이션 링크
@@ -62,14 +62,10 @@ struct ContentView: View {
                 } // end of HStack
                 
                 
-                /// 저장된 할 일 목록을 표시하는 리스트 각 항목은 네비게이션 링크로 구성되어 있고, 스와이프로 삭제가 가능함.
                 List {
                     ForEach(items) { item in
                         NavigationLink {
-                            DetailView(todoId: item.todoId,
-                                       todo: item.todo,
-                                       todoDetails: item.todoDetails,
-                                       endDate: item.endDate)
+                            DetailView(item: item)
                             
                         } label: {
                             HStack {

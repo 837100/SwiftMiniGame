@@ -11,7 +11,7 @@ import SwiftData
 @Model
 final class Item {
     
-    var todoId: UUID
+    @Attribute(.unique) var todoId: UUID
     var todo: String
     var endDate: Date
     var todoDetails: String
