@@ -11,13 +11,13 @@ import SwiftData
 @Model
 final class Item {
     
-    var todoId: Int
+    var todoId: UUID
     var todo: String
     var endDate: Date
     var todoDetails: String
   
     
-    init(todo: String , endDate: Date, todoId: Int, todoDetails: String) {
+    init(todo: String , endDate: Date, todoId: UUID, todoDetails: String) {
         self.todo = todo
         self.endDate = endDate
         self.todoId = todoId

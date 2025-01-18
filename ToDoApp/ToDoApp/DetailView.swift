@@ -8,15 +8,16 @@
 import SwiftUI
 import SwiftData
 struct DetailView: View {
-    let todoId: Int
-    var endDate: Date
-    var todo: String
-    var todoDetails: String?
+    let todoId: UUID
+    @State var endDate: Date
+    @State var todo: String
+    @State var todoDetails: String
     
     // SwiftData 쿼리 정의 - todoNumber와 일치하는 항목만 가져오기
-    @Query private var foundItems: [Item]
+ 
     @Environment(\.modelContext) private var modelContext
-    init(todoId: Int, todo: String, todoDetails: String , endDate: Date) {
+    @Query private var foundItems: [Item]
+    init(todoId: UUID, todo: String, todoDetails: String , endDate: Date) {
         self.todoId = todoId
         self.todo = todo
         self.todoDetails = todoDetails
@@ -30,35 +31,44 @@ struct DetailView: View {
     var body: some View {
         VStack {
             if foundItems.isEmpty {
-                // 항목을 찾지 못한 경우
+                
                 Text("할 일 \(todoId)를 찾을 수 없습니다")
                     .foregroundColor(.gray)
                     .padding()
             } else {
-                // 찾은 항목 표시
-                    List(foundItems) { item in
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("할 일: \(item.todo)")
-                                .font(.headline)
-                            
-                            Text("할 일 세부: \(item.todoDetails)")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                            
-                            
-                            Text("마감일: \(formatDate(item.endDate))")
-                                .font(.subheadline)
-                                .foregroundColor(.blue)
+                
+                List(foundItems) { item in
+                    VStack(alignment: .leading, spacing: 8) {
+                        TextField("\(item.todo)", text: $todo)
+                            .border(.secondary)
+                        
+                        TextField("\(item.todoDetails)",
+                                  text: $todoDetails,
+                                  axis: .vertical
+                        )
+                            .lineLimit(1...20)
+                            .border(.secondary)
+                        
+                        /// 마감 기한을 선택할 수 있는 날짜 선택기를 생성
+                        DatePicker(selection: $endDate) {
+                            Text("기한")
+                        }
+                        .border(.secondary)
                         
                     }
-                    .padding(.vertical, 4)
+                    Button(action: {
+                        updateItem()
+                    }, label: {
+                        Text("수정 하기")
+                    })
+                    .border(.blue)
+                    
+                    Text("\(todoId)")
                 }
+                .padding(.vertical, 4)
             }
         }
-        
-        .navigationTitle("할 일 상세")
     }
-    
     // 날짜 포맷팅 함수
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
@@ -66,11 +76,28 @@ struct DetailView: View {
         formatter.locale = Locale(identifier: "ko_KR")
         return formatter.string(from: date)
     }
+    
+    private func updateItem() {
+          guard let item = foundItems.first else { return }
+          withAnimation {
+              item.todo = todo
+              item.todoDetails = todoDetails
+              item.endDate = endDate
+              
+              // 변경 사항 저장
+              do {
+                  try modelContext.save()
+              } catch {
+                  print("Error saving updated item: \(error)")
+              }
+          }
+    } // end of updateItem
+    
 }
 
-    
 
-//                                                   
+
+//
 //#Preview {
 //    DetailView()
 //}

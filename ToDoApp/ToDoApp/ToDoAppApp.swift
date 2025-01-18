@@ -7,13 +7,11 @@
 
 import SwiftUI
 import SwiftData
-import os
+
 
 @main
 struct ToDoAppApp: App {
-    init() {
-            Logger(subsystem: "com.example.ToDoApp", category: "ModelContainer").debug("App started")
-        }
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self
