@@ -15,7 +15,10 @@ final class Item {
     var todo: String
     var endDate: Date
     var todoDetails: String
-  
+    var isToggled: Bool = false
+    var importance: Int = 0
+    var createDate: Date = Date()
+    var category: String = ""
     
     init(todo: String , endDate: Date, todoId: UUID, todoDetails: String) {
         self.todo = todo

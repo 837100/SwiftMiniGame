@@ -7,6 +7,7 @@ struct ContentView: View {
     @State var todo: String = ""
     @State var endDate: Date = Date()
     @State var todoDetails: String = ""
+//    @State var isToggled = Bool
     
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
@@ -69,11 +70,22 @@ struct ContentView: View {
                             
                         } label: {
                             HStack {
+                                Toggle("", isOn: Binding(
+                                    get: {item.isToggled},
+                                    set: { newValue in
+                                        withAnimation {
+                                            item.isToggled = newValue
+                                        }
+                                    }
+                                ))
+                                    .labelsHidden()
                                 Text(item.todo)
+                                 
                                 Spacer()
                                 Text(dateFormatString(date: item.endDate))
                                 Text("\(item.todoId)")
                             }
+                            .foregroundStyle(item.isToggled ? .gray : .black)
                         }
                     }
                     .onDelete(perform: deleteItems)
