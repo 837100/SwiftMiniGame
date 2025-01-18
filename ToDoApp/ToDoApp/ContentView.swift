@@ -15,14 +15,15 @@ struct ContentView: View {
     /// 할 일 텍스트를 저장하는 상태 변수
     @State var todo: String = ""
     /// 할 일의 고유번호를 저장하는 상태변수
-    @State var todoId: UUID = UUID()
+    @State var todoId: Int = 0
     /// 현재 날짜를 저장하는 상태변수
-    @State var makeDate: Date = Date()
+
     /// 마감 날짜를 저장하는 상태 변수로, 초기값은 현재시간으로 부터 30분 후로 설정
-    @State var endDate: Date =  {
-        let calendar = Calendar.current
-        return calendar.date(byAdding: .minute, value: 30, to: Date()) ?? Date()
-    } ()
+    @State var endDate: Date = Date()
+//    {
+//        let calendar = Calendar.current
+//        return calendar.date(byAdding: .minute, value: 30, to: Date()) ?? Date()
+//    } ()
  
     @State var todoDetails: String = ""
     
@@ -59,11 +60,13 @@ struct ContentView: View {
                     })
                     .border(.blue)
                     /// 검색 화면으로 이동하는 네비게이션 링크
-                    NavigationLink(destination:
-                                    ToDoFind(todoId: todoId)) {
+                    NavigationLink {
+                        ToDoFind(todoId:todoId, todo: todo, todoDetails: todoDetails, endDate: endDate)
+                    } label: {
                         Text("검색")
                     }
                     .border(.blue)
+                    
                     Button(action: {
                         addItem()
                     }, label: {
@@ -74,11 +77,11 @@ struct ContentView: View {
                 } // end of HStack
                 
                 
-                /// 저장된 할 일 목록을 표시하는 리스트 각 항목은 네비게시연 링크로 구성되어 있고, 스와이프로 삭제가 가능함.
+                /// 저장된 할 일 목록을 표시하는 리스트 각 항목은 네비게이션 링크로 구성되어 있고, 스와이프로 삭제가 가능함.
                 List {
                     ForEach(items) { item in
                         NavigationLink {
-//                            DetailView(todoNumber: todoNumber)
+                            DetailView(todoId: item.todoId , todo: item.todo, todoDetails: item.todoDetails,endDate: item.endDate)
                             
                         } label: {
                             HStack {
@@ -93,7 +96,9 @@ struct ContentView: View {
                 } // end of List
                 
             } // end of VStack
+            .navigationTitle("할 일 리스트")
         } // end of NavigationStack
+
     } // end of body view
     
     
@@ -101,8 +106,8 @@ struct ContentView: View {
     /// 새로운 할 일을 생성하고 SwiftData에 저장하는 함수
     private func addItem() {
         withAnimation {
-            let newItem = Item(todo: todo, endDate: endDate, todoId: todoId)
-            print(todo, endDate)
+            let newItem = Item(todo: todo, endDate: endDate, todoId: todoId, todoDetails: todoDetails)
+            todoId = todoId + 1
             modelContext.insert(newItem)
         }
     } // end of addItem
@@ -127,6 +132,7 @@ struct ContentView: View {
    
 
 } // end of ContentView
+
 
 
 
