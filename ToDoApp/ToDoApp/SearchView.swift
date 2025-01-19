@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-struct ToDoFind: View {
+struct SearchView: View {
     let endDate: Date
     let todo: String
     

@@ -20,10 +20,11 @@ final class Item {
     var createDate: Date = Date()
     var category: String = ""
     
-    init(todo: String , endDate: Date, todoId: UUID, todoDetails: String) {
+    init(todo: String , endDate: Date, todoId: UUID, todoDetails: String, importance: Int) {
         self.todo = todo
         self.endDate = endDate
         self.todoId = todoId
         self.todoDetails = todoDetails
+        self.importance = importance
     }
 }

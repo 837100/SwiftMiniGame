@@ -4,7 +4,6 @@ import SwiftData
 struct DetailView: View {
     @Bindable var item: Item
     
-    
     @State var todo: String
     @State var todoDetails: String
     @State var endDate: Date
@@ -36,21 +35,29 @@ struct DetailView: View {
                 Text("기한")
             }
             .border(.secondary)
+            Text("중요도: \(importToStrig(item.importance))")
             
-            Button(action: {
-                updateItem()
-            }, label: {
-                Text("저장하기")
-            })
-            .border(.blue)
             
             Text("\(item.todoId)")
         }
+        Button(action: {
+            updateItem()
+        }, label: {
+            Text("저장하기")
+        })
+        .border(.blue)
+        
         .padding(.vertical, 4)
     }
     
     
-    
+    func importToStrig(_ importance: Int) -> String {
+        switch importance {
+        case 1: "중간"
+        case 2: "높음"
+        default: "낮음"
+        }
+    }
     
     private func updateItem() {
         withAnimation {

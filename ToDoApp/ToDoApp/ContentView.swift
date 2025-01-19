@@ -7,6 +7,7 @@ struct ContentView: View {
     @State var todo: String = ""
     @State var endDate: Date = Date()
     @State var todoDetails: String = ""
+    @State var importance: Int = 0
 //    @State var isToggled = Bool
     
     @Environment(\.modelContext) private var modelContext
@@ -14,24 +15,44 @@ struct ContentView: View {
     
     var body: some View {
         
-        /// 네비게이션 기능을 위한 NavigationStack
+
         NavigationStack {
-            /// 수직 레이아웃을 위한 VStack
+          
             VStack {
                 Spacer()
-                /// 사용자가 할 일을 입력할 수 있는 텍스트 필드를 생성.
+
                 TextField("오늘의 할 일을 적어주세요", text: $todo)
                     .border(.secondary)
                 
                 TextField("상세 설명을 적어주세요", text: $todoDetails)
                     .border(.secondary)
-                
-                /// 마감 기한을 선택할 수 있는 날짜 선택기를 생성
+    
                 DatePicker(selection: $endDate) {
                     Text("기한은 언제까지인가요?")
                 }
                 .border(.secondary)
                 
+                HStack {
+                    Text("중요도 :")
+                    Button(action: {
+                        importance = 0
+                    } , label: {
+                        Text("낮음")
+                    })
+                   
+                    Button(action: {
+                        importance = 1
+                    }, label: {
+                        Text("중간")
+                    })
+                   
+                    Button(action: {
+                        importance = 2
+                    }, label: {
+                        Text("높음")
+                    })
+                }
+                .border(.secondary)
                 
                 HStack {
                     
@@ -42,17 +63,17 @@ struct ContentView: View {
                         Text("지우기")
                     })
                     .border(.blue)
-                    /// 검색 화면으로 이동하는 네비게이션 링크
                     
+                    Spacer()
                     NavigationLink  {
-                        ToDoFind(
+                        SearchView(
                             todo: todo,
                             endDate: endDate)
                     } label: {
                         Text("검색")
                     }
                     .border(.blue)
-                    
+                    Spacer()
                     Button(action: {
                         addItem()
                     }, label: {
@@ -98,18 +119,18 @@ struct ContentView: View {
 
     } // end of body view
     
+    		
     
-    
-    /// 새로운 할 일을 생성하고 SwiftData에 저장하는 함수
+   
     private func addItem() {
         withAnimation {
-            let newItem = Item(todo: todo, endDate: endDate, todoId: UUID(), todoDetails: todoDetails)
+            let newItem = Item(todo: todo, endDate: endDate, todoId: UUID(), todoDetails: todoDetails, importance: importance)
             modelContext.insert(newItem)
         }
     } // end of addItem
     
     
-    /// 선택된 할일을 삭제하는 함수
+
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
@@ -118,6 +139,8 @@ struct ContentView: View {
         }
     } // end of deleteItems
     
+    
+    
     func dateFormatString(date: Date?) -> String {
         guard let date = date else { return "날짜 없음"}
         let formatter = DateFormatter()
@@ -125,6 +148,8 @@ struct ContentView: View {
         formatter.locale = Locale(identifier: "ko_KR")
         return formatter.string(from: date)
     }
+    
+
    
 
 } // end of ContentView
