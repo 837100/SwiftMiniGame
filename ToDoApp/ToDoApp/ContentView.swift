@@ -8,8 +8,8 @@ struct ContentView: View {
     @State var endDate: Date = Date()
     @State var todoDetails: String = ""
     @State var importance: Int = 0
-//    @State var isToggled = Bool
     
+    let options = ["낮음", "중간", "높음"]
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
     
@@ -33,24 +33,14 @@ struct ContentView: View {
                 .border(.secondary)
                 
                 HStack {
-                    Text("중요도 :")
-                    Button(action: {
-                        importance = 0
-                    } , label: {
-                        Text("낮음")
-                    })
-                   
-                    Button(action: {
-                        importance = 1
-                    }, label: {
-                        Text("중간")
-                    })
-                   
-                    Button(action: {
-                        importance = 2
-                    }, label: {
-                        Text("높음")
-                    })
+                    Text("중요도를 선택해주세요 : \(options[importance])")
+                    Picker("중요도", selection: $importance) {
+                        ForEach(0..<options.count, id: \.self) { index in
+                            Text(options[index]).tag(index)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding()
                 }
                 .border(.secondary)
                 

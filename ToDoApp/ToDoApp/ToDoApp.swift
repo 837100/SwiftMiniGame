@@ -10,7 +10,7 @@ import SwiftData
 
 
 @main
-struct ToDoAppApp: App {
+struct ToDoApp: App {
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
