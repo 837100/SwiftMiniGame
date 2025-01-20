@@ -37,7 +37,7 @@ struct DetailView: View {
             .border(.secondary)
             Text("중요도: \(importToStrig(item.importance))")
             
-            
+            Text("할 일 상태: \(item.isToggled)")
             Text("\(item.todoId)")
         }
         Button(action: {

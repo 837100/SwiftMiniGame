@@ -4,22 +4,23 @@ import SwiftData
 struct SearchView: View {
     let endDate: Date
     let todo: String
-    
+    let importance: Int
     
 
     @Query private var foundItems: [Item]
     @Environment(\.modelContext) private var modelContext
     
-    init(todo: String, endDate: Date) {
+    init(todo: String, endDate: Date, importance: Int) {
         
         self.todo = todo
         self.endDate = endDate
-       
+        self.importance = importance
+        
         _foundItems = Query(filter: #Predicate<Item> { item in
             if todo == "" {
-                return item.endDate <= endDate
+                return item.endDate <= endDate && item.importance == importance
             } else {
-                return item.todo.localizedStandardContains(todo) && item.endDate <= endDate
+                return item.todo.localizedStandardContains(todo) && item.endDate <= endDate && item.importance == importance
             }
         })
     }
@@ -31,8 +32,10 @@ struct SearchView: View {
                     .foregroundColor(.gray)
                     .padding()
             } else {
+             
                 List{
                     ForEach(foundItems) { item in
+                        
                         NavigationLink {
                             DetailView(item: item)
                         } label: {
@@ -48,6 +51,7 @@ struct SearchView: View {
                                 Text("todoId: \(item.todoId)")
                                     .font(.subheadline)
                                     .foregroundColor(.blue)
+                                Text("중요도: \(item.importance)")
                             }
                         }
                     }

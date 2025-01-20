@@ -41,6 +41,9 @@ struct ContentView: View {
                     }
                     .pickerStyle(.segmented)
                     .padding()
+                    .onChange(of: importance, initial: false) {
+                        importance = importance
+                    }
                 }
                 .border(.secondary)
                 
@@ -58,7 +61,9 @@ struct ContentView: View {
                     NavigationLink  {
                         SearchView(
                             todo: todo,
-                            endDate: endDate)
+                            endDate: endDate,
+                            importance: importance
+                        )
                     } label: {
                         Text("검색")
                     }
