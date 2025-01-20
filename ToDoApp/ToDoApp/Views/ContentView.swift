@@ -54,10 +54,17 @@ struct ContentView: View {
                         todoDetails = ""
                     }, label: {
                         Text("지우기")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .frame(width: 80, height: 40)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                            .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
                     })
-                    .border(.blue)
+                 
                     
-                    Spacer()
+                
                     NavigationLink  {
                         SearchView(
                             todo: todo,
@@ -66,15 +73,29 @@ struct ContentView: View {
                         )
                     } label: {
                         Text("검색")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .frame(width: 80, height: 40)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                            .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
                     }
-                    .border(.blue)
-                    Spacer()
+                  
+          
                     Button(action: {
                         addItem()
                     }, label: {
-                        Text("할 일 추가")
+                        Text("추가")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .frame(width: 80, height: 40)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                            .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
                     })
-                    .border(.blue)
+    
            
                 } // end of HStack
                 
@@ -109,7 +130,7 @@ struct ContentView: View {
                 } // end of List
                 
             } // end of VStack
-            .navigationTitle("할 일 리스트")
+        
         } // end of NavigationStack
 
     } // end of body view
