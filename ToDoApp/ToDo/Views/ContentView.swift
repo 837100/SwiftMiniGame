@@ -9,51 +9,22 @@ struct ContentView: View {
     @State var todoDetails: String = ""
     @State var importance: Int = 0
     
-    let options = ["낮음", "중간", "높음"]
+    let options = ["🚶‍♀️", "🚗", "🚀"]
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
     
     var body: some View {
-        
-
         NavigationStack {
-          
             VStack {
                 Spacer()
-
-                TextField("오늘의 할 일을 적어주세요", text: $todo)
-                    .border(.secondary)
-                
-                TextField("상세 설명을 적어주세요", text: $todoDetails)
-                    .border(.secondary)
-    
-                DatePicker(selection: $endDate) {
-                    Text("기한은 언제까지인가요?")
-                }
-                .border(.secondary)
-                
                 HStack {
-                    Text("중요도를 선택해주세요 : \(options[importance])")
-                    Picker("중요도", selection: $importance) {
-                        ForEach(0..<options.count, id: \.self) { index in
-                            Text(options[index]).tag(index)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .padding()
-                    .onChange(of: importance, initial: false) {
-                        importance = importance
-                    }
-                }
-                .border(.secondary)
-                
-                HStack {
-                    
+                    TextField("할 일", text: $todo)
+                        .border(.secondary)
+                        .padding(.leading, 10)
                     Button(action: {
                         todo = ""
-                        todoDetails = ""
                     }, label: {
-                        Text("지우기")
+                        Image(systemName: "eraser")
                             .font(.headline)
                             .foregroundStyle(.white)
                             .padding()
@@ -62,9 +33,52 @@ struct ContentView: View {
                             .cornerRadius(10)
                             .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
                     })
-                 
-                    
+                }
                 
+                HStack {
+                    TextField("상세 설명", text: $todoDetails)
+                        .border(.secondary)
+                        .padding(.leading, 10)
+                    Button(action: {
+                        todoDetails = ""
+                    }, label: {
+                        Image(systemName: "eraser")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .frame(width: 80, height: 40)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                            .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
+                    })
+                }
+                
+                HStack {
+                    Image(systemName: "calendar")
+                        .padding(.trailing)
+                    DatePicker("기한", selection: $endDate)
+                        .labelsHidden() // 텍스트 레이블 숨김
+                }
+              
+                HStack {
+                    Image(systemName: "flag")
+                    ForEach(0..<options.count, id: \.self) { index in
+                        Button(action: {
+                            importance = index
+                        }) {
+                            Text(options[index])
+                                .font(.headline)
+                                .padding()
+                                .frame(width: 80, height: 40)
+                                .background(importance == index ? importanceColor(for: index) : Color.white)
+                                .foregroundColor(importance == index ? .white : .black) // 선택된 항목만 텍스트 색상 변경
+                                .cornerRadius(10)
+                                .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5)
+                        }
+                    }
+                }
+          
+                HStack {
                     NavigationLink  {
                         SearchView(
                             todo: todo,
@@ -72,7 +86,10 @@ struct ContentView: View {
                             importance: importance
                         )
                     } label: {
-                        Text("검색")
+                        
+                        Image(systemName: "magnifyingglass")
+                            .font(.headline)
+                            .foregroundColor(.white)
                             .font(.headline)
                             .foregroundStyle(.white)
                             .padding()
@@ -81,12 +98,15 @@ struct ContentView: View {
                             .cornerRadius(10)
                             .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
                     }
-                  
-          
+                    
                     Button(action: {
                         addItem()
+                        todo = ""
+                        todoDetails = ""
                     }, label: {
-                        Text("추가")
+                        Image(systemName: "plus")
+                            .font(.headline)
+                            .foregroundColor(.white)
                             .font(.headline)
                             .foregroundStyle(.white)
                             .padding()
@@ -95,10 +115,9 @@ struct ContentView: View {
                             .cornerRadius(10)
                             .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
                     })
-    
-           
+
                 } // end of HStack
-                
+               
                 
                 List {
                     ForEach(items) { item in
@@ -115,9 +134,9 @@ struct ContentView: View {
                                         }
                                     }
                                 ))
-                                    .labelsHidden()
+                                .labelsHidden()
                                 Text(item.todo)
-                                 
+                                
                                 Spacer()
                                 Text(dateFormatString(date: item.endDate))
                                 Text("\(item.todoId)")
@@ -128,16 +147,21 @@ struct ContentView: View {
                     .onDelete(perform: deleteItems)
                     
                 } // end of List
+                .overlay(
+                      Rectangle()
+                          .frame(height: 1)
+                          .foregroundColor(.gray), alignment: .top
+                  )
                 
             } // end of VStack
-        
+            
         } // end of NavigationStack
-
+        
     } // end of body view
     
-    		
     
-   
+    
+    
     private func addItem() {
         withAnimation {
             let newItem = Item(todo: todo, endDate: endDate, todoId: UUID(), todoDetails: todoDetails, importance: importance)
@@ -146,7 +170,7 @@ struct ContentView: View {
     } // end of addItem
     
     
-
+    
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
@@ -157,17 +181,25 @@ struct ContentView: View {
     
     
     
-    func dateFormatString(date: Date?) -> String {
+    private func dateFormatString(date: Date?) -> String {
         guard let date = date else { return "날짜 없음"}
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH월 dd일 HH:mm 까지"
+        formatter.dateFormat = "yyyy-HH-dd HH:mm"
         formatter.locale = Locale(identifier: "ko_KR")
         return formatter.string(from: date)
     }
     
-
-   
-
+    private func importanceColor(for index: Int) -> Color {
+        switch index {
+        case 0: return .green
+        case 1: return .orange
+        case 2: return .red
+        default: return .black
+        }
+    }
+    
+  
+    
 } // end of ContentView
 
 

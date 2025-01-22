@@ -17,14 +17,15 @@ final class Item {
     var todoDetails: String
     var isToggled: Bool = false
     var importance: Int = 0
-    var createDate: Date = Date()
+    var createdAt: Date = Date()
     var category: String = ""
     
-    init(todo: String , endDate: Date, todoId: UUID, todoDetails: String, importance: Int) {
+    init(todo: String , endDate: Date, todoId: UUID, todoDetails: String, importance: Int, createdAt: Date = Date()) {
         self.todo = todo
         self.endDate = endDate
         self.todoId = todoId
         self.todoDetails = todoDetails
         self.importance = importance
+        self.createdAt = createdAt
     }
 }

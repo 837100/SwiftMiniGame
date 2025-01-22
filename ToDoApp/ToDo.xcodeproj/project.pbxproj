@@ -11,9 +11,9 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B75705F92D39ED6300367D99 /* ToDoApp */ = {
+		B75705F92D39ED6300367D99 /* ToDo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ToDoApp;
+			path = ToDo;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		B75705EE2D39ED6300367D99 = {
 			isa = PBXGroup;
 			children = (
-				B75705F92D39ED6300367D99 /* ToDoApp */,
+				B75705F92D39ED6300367D99 /* ToDo */,
 				B75705F82D39ED6300367D99 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,7 +61,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B75705F92D39ED6300367D99 /* ToDoApp */,
+				B75705F92D39ED6300367D99 /* ToDo */,
 			);
 			name = ToDo;
 			packageProductDependencies = (
@@ -251,7 +251,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ToDoApp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"ToDo/Preview Content\"";
 				DEVELOPMENT_TEAM = QFY346K4GK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -280,7 +280,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ToDoApp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"ToDo/Preview Content\"";
 				DEVELOPMENT_TEAM = QFY346K4GK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
