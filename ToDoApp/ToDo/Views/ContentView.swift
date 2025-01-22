@@ -8,6 +8,7 @@ struct ContentView: View {
     @State var endDate: Date = Date()
     @State var todoDetails: String = ""
     @State var importance: Int = 0
+    @State var showingPopup = false
     
     let options = ["🚶‍♀️", "🚗", "🚀"]
     @Environment(\.modelContext) private var modelContext
@@ -28,7 +29,7 @@ struct ContentView: View {
                             .font(.headline)
                             .foregroundStyle(.white)
                             .padding()
-                            .frame(width: 80, height: 40)
+                            .frame(width: 30, height: 30)
                             .background(Color.blue)
                             .cornerRadius(10)
                             .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
@@ -46,7 +47,7 @@ struct ContentView: View {
                             .font(.headline)
                             .foregroundStyle(.white)
                             .padding()
-                            .frame(width: 80, height: 40)
+                            .frame(width: 30, height: 30)
                             .background(Color.blue)
                             .cornerRadius(10)
                             .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
@@ -55,12 +56,10 @@ struct ContentView: View {
                 
                 HStack {
                     Image(systemName: "calendar")
-                        .padding(.trailing)
+                        .padding(.leading)
                     DatePicker("기한", selection: $endDate)
                         .labelsHidden() // 텍스트 레이블 숨김
-                }
-              
-                HStack {
+                    
                     Image(systemName: "flag")
                     ForEach(0..<options.count, id: \.self) { index in
                         Button(action: {
@@ -69,36 +68,37 @@ struct ContentView: View {
                             Text(options[index])
                                 .font(.headline)
                                 .padding()
-                                .frame(width: 80, height: 40)
+                                .frame(width: 40, height: 30)
                                 .background(importance == index ? importanceColor(for: index) : Color.white)
-                                .foregroundColor(importance == index ? .white : .black) // 선택된 항목만 텍스트 색상 변경
+                                .foregroundStyle(importance == index ? .white : .black) // 선택된 항목만 텍스트 색상 변경
                                 .cornerRadius(10)
                                 .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5)
                         }
                     }
+                    
+                    
+                    
                 }
-          
+                
                 HStack {
                     NavigationLink  {
                         SearchView(
                             todo: todo,
                             endDate: endDate,
-                            importance: importance
-                        )
-                    } label: {
-                        
-                        Image(systemName: "magnifyingglass")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                            .padding()
-                            .frame(width: 80, height: 40)
-                            .background(Color.blue)
-                            .cornerRadius(10)
-                            .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
-                    }
-                    
+                            importance: importance,
+                            todoDetails: todoDetails
+                        )} label: {
+                            Image(systemName: "magnifyingglass")
+                                .font(.headline)
+                                .foregroundStyle(.white)
+                                .font(.headline)
+                                .foregroundStyle(.white)
+                                .padding()
+                                .frame(width: 80, height: 40)
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                                .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
+                        }
                     Button(action: {
                         addItem()
                         todo = ""
@@ -106,7 +106,7 @@ struct ContentView: View {
                     }, label: {
                         Image(systemName: "plus")
                             .font(.headline)
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .font(.headline)
                             .foregroundStyle(.white)
                             .padding()
@@ -115,15 +115,29 @@ struct ContentView: View {
                             .cornerRadius(10)
                             .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
                     })
-
+                    
+                    Button(action: {
+                       
+                    }, label: {
+                        Image(systemName: "line.3.horizontal.decrease")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .frame(width: 80, height: 40)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                            .shadow(color: .gray.opacity(0.5), radius : 5, x : 0, y : 5)
+                            .sheet(isPresented: $showingPopup) {
+                                   // TODO: 필터 설정 창 구현 필요
+                            }
+                    })
                 } // end of HStack
-               
-                
                 List {
                     ForEach(items) { item in
                         NavigationLink {
                             DetailView(item: item)
-                            
                         } label: {
                             HStack {
                                 Toggle("", isOn: Binding(
@@ -136,31 +150,24 @@ struct ContentView: View {
                                 ))
                                 .labelsHidden()
                                 Text(item.todo)
-                                
                                 Spacer()
                                 Text(dateFormatString(date: item.endDate))
-                                Text("\(item.todoId)")
+//                                Text("\(item.todoId)")
                             }
                             .foregroundStyle(item.isToggled ? .gray : .black)
+                            .strikethrough(item.isToggled, color: .gray)
                         }
                     }
                     .onDelete(perform: deleteItems)
-                    
                 } // end of List
                 .overlay(
-                      Rectangle()
-                          .frame(height: 1)
-                          .foregroundColor(.gray), alignment: .top
-                  )
-                
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundStyle(.gray), alignment: .top
+                )
             } // end of VStack
-            
         } // end of NavigationStack
-        
     } // end of body view
-    
-    
-    
     
     private func addItem() {
         withAnimation {
@@ -168,8 +175,6 @@ struct ContentView: View {
             modelContext.insert(newItem)
         }
     } // end of addItem
-    
-    
     
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
@@ -179,12 +184,10 @@ struct ContentView: View {
         }
     } // end of deleteItems
     
-    
-    
     private func dateFormatString(date: Date?) -> String {
         guard let date = date else { return "날짜 없음"}
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-HH-dd HH:mm"
+        formatter.dateFormat = "~ MM/dd HH:mm"
         formatter.locale = Locale(identifier: "ko_KR")
         return formatter.string(from: date)
     }
@@ -198,12 +201,7 @@ struct ContentView: View {
         }
     }
     
-  
-    
 } // end of ContentView
-
-
-
 
 #Preview {
     ContentView()
