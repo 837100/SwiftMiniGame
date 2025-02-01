@@ -1,9 +1,0 @@
-시뮬레이터 앱 파일 경로
-
-현재 실행중인 시뮬레이터 정보 출력
-xcrun simctl list devices booted
-시뮬레이터 앱 파일 위치 
-~/Library/Developer/CoreSimulator/Devices
-
-find . | grep "파일명" 으로 파일 경로 찾고
-open . 찾은 경로로 파일 열기
